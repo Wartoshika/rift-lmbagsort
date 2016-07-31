@@ -1,0 +1,14 @@
+Identifier = "LmUI"
+Name = "LooM UI Lib"
+Description = "Eine Bibliothek fuer Benutzerschnitstellen"
+Author = "Wartoshika@Brutwacht"
+Email = "oliverwarrings@freenet.de"
+Version = "0.1"
+Environment = "3.7"
+
+RunOnStartup = {
+  "main.lua",
+  "window/window.lua",
+  "selectBox/selectBox.lua",
+  "selectBox/selectBoxEvents.lua"
+}

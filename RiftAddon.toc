@@ -1,0 +1,27 @@
+Identifier = "LmBagSort"
+Name = "LooM Bag Sort"
+Description = "Ein Tool welches automatisch eingehende Gegenstaende in den Taschen organisiert"
+Author = "Wartoshika@Brutwacht"
+Email = "oliverwarrings@freenet.de"
+Version = "0.1"
+Environment = "3.7"
+
+SavedVariables = {
+  LmBagSortGlobal = 'character'
+}
+
+Embed = {
+  ["vendor/lmutils"] = true,
+  ["vendor/lmui"] = true
+}
+
+Dependencies = {
+  LmUI = {"required", "before"},
+  LmUtils = {"required", "before"}
+}
+
+RunOnStartup = {
+  "global.lua",
+  "ui.lua",
+  "main.lua"
+}

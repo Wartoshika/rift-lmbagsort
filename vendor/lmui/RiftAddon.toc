@@ -9,6 +9,9 @@ Environment = "3.7"
 RunOnStartup = {
   "main.lua",
   "window/window.lua",
+  "window/windowEvents.lua",
   "selectBox/selectBox.lua",
-  "selectBox/selectBoxEvents.lua"
+  "selectBox/selectBoxEvents.lua",
+  "checkbox/checkbox.lua",
+  "checkbox/checkboxEvents.lua"
 }

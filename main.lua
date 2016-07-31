@@ -17,12 +17,35 @@ local function init()
         end
     end
 
-    -- gui bauen
-    --LmBagSort.Ui.init(addon)
+    -- addon setzen
+    LmBagSort.Addon = addon
+
+    -- taschenplaetze setzen
+    for bag, bagItem in pairs(Inspect.Item.List()) do
+
+        -- details holen
+        local type, subType, number = Utility.Item.Slot.Parse(bag)
+
+        -- passt der typ?
+        if type == "inventory" and subType == "bag" then
+
+            -- ja, passt. nun noch gucken ob es ueberhaupt slots gibt
+            -- beispiel: gekaufter oder vorhanderer slot aber keine tasche vorhanden
+            if bagItem then
+
+                -- tasche vorhanden
+                LmBagSort.Misc.Bags[number] = bag
+            end
+        end
+    end
+
+    -- events registrieren
+    Command.Event.Attach(Event.Item.Slot, LmBagSort.Engine.bagUpdateEvent, "LmBagSort.Engine.bagUpdateEvent")
 
     -- erfolgreichen start ausgeben
     print("erfolgreich geladen (v " .. addon.toc.Version .. ")")
 
+    LmBagSort.Ui.show()
 end
 
 -- speichert die gesetzten optionen

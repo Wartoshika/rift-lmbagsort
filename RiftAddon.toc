@@ -23,5 +23,6 @@ Dependencies = {
 RunOnStartup = {
   "global.lua",
   "ui.lua",
+  "engine.lua",
   "main.lua"
 }

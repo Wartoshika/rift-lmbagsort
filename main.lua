@@ -13,7 +13,7 @@ local function init()
         for k,v in pairs(LmBagSortGlobal) do
 
             -- einzelnd updaten
-            LmMBagSort.Options[k] = v;
+            LmBagSort.Options[k] = v;
         end
     end
 
@@ -52,7 +52,7 @@ end
 local function saveOptionVariables()
 
     -- ueberschreiben
-    LmBagSortGlobal = LmMBagSort.Options
+    LmBagSortGlobal = LmBagSort.Options
 end
 
 -- init event binden

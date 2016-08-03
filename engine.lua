@@ -2,6 +2,12 @@
 -- dass es nicht ein zweites mal verschoben wird.
 local itemLockMove = {}
 
+-- wenn mehrere gegenstaende gelootet werden, dann duerfen die slots nicht
+-- doppelt belegt werden.
+local itemLockSlot = {}
+local itemLockSlotTime = {}
+local detectThresholdLockBug = 5    -- 5 sekunden
+
 -- wird gerufen wenn 
 function LmBagSort.Engine.bagUpdateEvent(_, items)
 
@@ -28,10 +34,30 @@ function LmBagSort.Engine.bagUpdateEvent(_, items)
     -- gueltig?
     if not LmUtils.tableHasValue(stack, false) then
 
+        -- prueft ob ggf. items im lock haengen bleiben.
+        LmBagSort.Engine.dectectLockBug()
+
         -- elemente sind neu in die tasche gekommen, verarbeiten
         LmBagSort.Engine.sortItems(stack)
     end
 
+end
+
+-- prueft ob ggf. items im lock haengen bleiben
+function LmBagSort.Engine.dectectLockBug()
+
+    for item, time in pairs(itemLockSlotTime) do
+
+        -- ist die zeit abgelaufen?
+        if (Inspect.Time.Server() - time) > detectThresholdLockBug then
+
+            dump("bug fuer slot", itemLockSlot[item], "gefunden")
+
+            -- ja bug gefunden ... lock entfernen
+            itemLockSlot[item] = nil
+            itemLockSlotTime[item] = nil
+        end
+    end
 end
 
 -- sortiert die gegenstaende nach der einstellung
@@ -47,6 +73,10 @@ function LmBagSort.Engine.sortItems(items)
             -- slot zum verschieben finden
             table.remove(itemLockMove, LmUtils.findTableKey(itemLockMove, item))
 
+            -- item slot lock wieder frei machen
+            itemLockSlot[item] = nil
+            itemLockSlotTime[item] = nil
+
             -- zum naechsten item
             goto sortItemContinue
         end
@@ -61,6 +91,10 @@ function LmBagSort.Engine.sortItems(items)
         -- fuer den gegenstand wurde ein slot gefunden
         -- also verschieben
         if slotDestination then
+
+            -- slot zunaechst sperren
+            itemLockSlot[item] = slotDestination
+            itemLockSlotTime[item] = Inspect.Time.Server()
 
             -- gegenstand zum slot verschieben
             Command.Item.Move(slot, slotDestination)
@@ -150,8 +184,14 @@ function LmBagSort.Engine.getFreeSlotForBagAndDirection(bag, direction)
     -- slot default
     local slot = nil
 
+    -- evtl ist kein platz mehr in der tasche    
+    local slotNumberInBag = LmBagSort.Engine.getNextFreeItemSlot(bag, direction)
+    
     -- taschenplatz anfragen
-    local slot = Utility.Item.Slot.Inventory(LmBagSort.Engine.getBagNumberFromId(bag), LmBagSort.Engine.getNextFreeItemSlot(bag, direction))
+    if slotNumberInBag then
+
+        slot = Utility.Item.Slot.Inventory(LmBagSort.Engine.getBagNumberFromId(bag), slotNumberInBag)
+    end
 
     -- kein platz gefunden (alle taschen voll oder keine einstellung)
     return slot;
@@ -183,12 +223,17 @@ function LmBagSort.Engine.getNextFreeItemSlot(bag, direction)
 
                 -- platz zurueckgeben
                 local _, __, number = Utility.Item.Slot.Parse(itemBag)
-                table.insert(invStack, number)
+
+                -- gucken ob der slot blockiert ist
+                if not LmUtils.tableHasValue(itemLockSlot, itemBag) then
+                
+                    -- ist nicht geblockt. moeglichen slot hinzufuegen
+                    table.insert(invStack, number)
+                end
             end
         end
     end
 
-dump(invStack)
     -- moegliche slots vorhanden?
     if LmUtils.tableLength(invStack) == 0 then return end
 

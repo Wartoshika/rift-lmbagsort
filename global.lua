@@ -9,7 +9,9 @@ LmBagSort = {
             -- waffen und ruestungen
             weapon_and_armor = {
                 "^armor",
-                "^weapon"
+                "^weapon",
+                "^planar lesser",
+                "^planar gerater"
             },
 
             -- dimensionsgegenstaende
@@ -19,7 +21,8 @@ LmBagSort = {
 
             -- handwerksgegenstaende
             crafting = {
-                "^crafting material"
+                "^crafting material",
+                "^crafting ingredient"
             },
 
             -- artefakte

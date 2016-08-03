@@ -32,6 +32,22 @@ function LmBagSort.Ui.show()
     return false
 end
 
+-- erstellt einen minimap button fuer die konfiguration
+function LmBagSort.Ui.MinimapButton()
+
+    local buttonContext = UI.CreateContext(LmBagSort.Addon.identifier .. ".MinimapButtonContext")
+    local button = UI.CreateFrame("Texture", LmBagSort.Addon.identifier .. ".MinimapButton", buttonContext)
+    button:SetTexture("Rift", "btn_bag_(normal).png.dds")
+    button:SetPoint("BOTTOMLEFT", UI.Native.MapMini, "BOTTOMLEFT", 10, -15)
+
+    -- klick event
+    function button.Event:LeftClick()
+
+        -- ui anzeigen
+        LmBagSort.Ui.show()
+    end
+end
+
 -- alle einstellungsmoeglichkeiten initialisieren
 function LmBagSort.Ui.initialise()
 

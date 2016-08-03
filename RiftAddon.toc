@@ -3,7 +3,7 @@ Name = "LooM Bag Sort"
 Description = "Ein Tool welches automatisch eingehende Gegenstaende in den Taschen organisiert"
 Author = "Wartoshika@Brutwacht"
 Email = "oliverwarrings@freenet.de"
-Version = "0.1"
+Version = "0.9 beta"
 Environment = "3.7"
 
 SavedVariables = {

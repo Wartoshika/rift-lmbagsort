@@ -130,7 +130,7 @@ function LmBagSort.Engine.getBagSlotByCategory(itemCategory)
             for kr, regexp in pairs(LmBagSort.Misc.Categories[category]) do
 
                 -- treffer?
-                if string.match(itemCategory, regexp) then
+                if type(itemCategory) == "string" and string.match(itemCategory, regexp) then
 
                     -- ja!
                     categoryFound = category
